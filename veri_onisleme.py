@@ -10,3 +10,5 @@ print("yaptık laa")
 
 print("Veri onisleme basliyor!")
 print("başlaa")
+
+print("ÖB")
