@@ -10,3 +10,6 @@ print("yaptık laa")
 
 print("Veri onisleme basliyor!")
 print("başlaa")
+
+
+print("hadi başlayak artık")
