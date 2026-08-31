@@ -165,10 +165,14 @@ Bu özellik, modelin eğitim verisinin dışında kalan örneklerde aşırı gü
 
 ---
 
-## 🚨 Red Flag Kontrolü
+## 🚨 Red Flag (Kritik Belirti) Kontrolü
 
-Sistem belirli kritik semptomları ve semptom kombinasyonlarını kontrol eder.
+Sistemde hastalık tahmininden bağımsız olarak çalışan kural tabanlı bir Red Flag güvenlik mekanizması bulunmaktadır.Sistem belirli kritik semptomları ve semptom kombinasyonlarını kontrol eder.
 
+Bu mekanizmanın amacı, makine öğrenmesi modeli herhangi bir hastalığı düşük olasılıkla tahmin etse bile, kullanıcının girdiği semptomlar arasında acil tıbbi değerlendirme gerektirebilecek kritik belirtileri ayrıca kontrol etmektir.
+
+Bazı belirtiler tek başına kritik olmayabilir; ancak belirli semptomların birlikte görülmesi daha ciddi bir durumun göstergesi olabilir.
+Bu nedenle sistem semptomları yalnızca tek tek değil, kombinasyon halinde de kontrol eder.
 Örneğin:
 
 ```text
