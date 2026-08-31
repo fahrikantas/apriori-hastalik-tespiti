@@ -154,27 +154,6 @@ Güven seviyesi özellikle modellerin birbirinden farklı sonuçlar ürettiği d
 
 ---
 
-## ⚠️ Model Görüş Ayrılığı
-
-7 model aynı hastalığı tahmin etmeyebilir.
-
-Sistem bu durumları takip ederek model görüş ayrılığını kullanıcıya yansıtabilir.
-
-Örneğin:
-
-```text
-Decision Tree       → Disease A
-Naive Bayes         → Disease A
-Random Forest       → Disease B
-Logistic Regression → Disease A
-SVM                 → Disease B
-XGBoost             → Disease A
-LightGBM            → Disease B
-```
-
-Bu durumda sistem tahmin belirsizliğini dikkate alır.
-
----
 
 ## 🔍 OOD (Out-of-Distribution) Algılama
 
