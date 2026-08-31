@@ -72,6 +72,24 @@ Modellerin tahminleri daha sonra topluluk öğrenmesi yaklaşımıyla birleştir
 
 ---
 
+## 🔗 Apriori Birliktelik Kuralları
+
+Makine öğrenmesi modellerinin yanında **Apriori algoritması** kullanılarak semptom-hastalık ilişkileri analiz edilir.
+
+Örneğin:
+
+```text
+Semptom A + Semptom B
+          │
+          ▼
+     Hastalık X
+```
+
+Apriori sonuçları, seçilen semptomların hangi hastalıklarla daha güçlü biçimde ilişkili olduğunu göstermeye yardımcı olur.
+
+---
+
+
 ## 🗳️ Ağırlıklı Soft-Voting Ensemble
 
 Her modelin tahmini doğrudan eşit ağırlıkta kullanılmaz.
@@ -88,23 +106,6 @@ Bu yapı sonucunda:
 birlikte değerlendirilebilir.
 
 `predict_proba` desteklemeyen modeller için sistem uygun bir fallback mekanizması kullanır.
-
----
-
-## 🔗 Apriori Birliktelik Kuralları
-
-Makine öğrenmesi modellerinin yanında **Apriori algoritması** kullanılarak semptom-hastalık ilişkileri analiz edilir.
-
-Örneğin:
-
-```text
-Semptom A + Semptom B
-          │
-          ▼
-     Hastalık X
-```
-
-Apriori sonuçları, seçilen semptomların hangi hastalıklarla daha güçlü biçimde ilişkili olduğunu göstermeye yardımcı olur.
 
 ---
 
