@@ -611,57 +611,6 @@ adresinden uygulamaya erişilebilir.
 
 ---
 
-# 🧪 Testler
-
-Proje kapsamında farklı modüller için pytest testleri bulunmaktadır.
-
-Testleri çalıştırmak için:
-
-```bash
-python -m pytest
-```
-
-Daha ayrıntılı çıktı:
-
-```bash
-python -m pytest -v
-```
-
-Testler arasında:
-
-* API testleri
-* Pipeline testleri
-* Chatbot testleri
-* Calibration testleri
-* OOD testleri
-* Red flag testleri
-* ICD-10 testleri
-* Model yeniden eğitim testleri
-* Synthetic data testleri
-* Telemetry testleri
-* Versioning testleri
-
-bulunmaktadır.
-
----
-
-# 🔄 Model Yeniden Eğitme
-
-Projede modellerin güncel veri setine göre yeniden eğitilmesini sağlayan mekanizma bulunmaktadır.
-
-Model metadata sistemi:
-
-* Veri parmak izi
-* Eğitim tarihi
-* Model durumu
-* Model doğruluğu
-* Model schema versiyonu
-
-gibi bilgileri takip eder.
-
-Veri seti değiştiğinde sistem eski model artefaktlarını tespit edebilir ve modellerin yeniden eğitilmesi gerektiğini belirtebilir.
-
----
 
 # 🧬 Model Versiyonlama
 
@@ -784,11 +733,9 @@ Genel tahmin pipeline'ı:
         ↓
 11. ICD-10 eşlemesi
         ↓
-12. Ayırıcı tanı
+12. Açıklanabilirlik
         ↓
-13. Açıklanabilirlik
-        ↓
-14. Raporlama
+13. Raporlama
 ```
 
 ---
@@ -903,10 +850,8 @@ Projeye ilerleyen aşamalarda aşağıdaki özellikler eklenebilir:
 
 # 👨‍💻 Geliştirici
 
+**Fahri Kantaş**
 **Salih Emre Kesici**
-
-Veri Bilimi ve Analitiği öğrencisi
-Bursa Teknik Üniversitesi
 
 ---
 
