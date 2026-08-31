@@ -396,31 +396,6 @@ apriori-hastalik-tespiti/
 
 ---
 
-## 1. Repoyu Klonlama
-
-```bash
-git clone <REPOSITORY_URL>
-cd <REPOSITORY_FOLDER>
-```
-
----
-
-## 2. Sanal Ortam Oluşturma
-
-### Windows
-
-```bash
-python -m venv .venv
-.venv\Scripts\activate
-```
-
-### macOS / Linux
-
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-```
-
 ---
 
 ## 3. Gerekli Paketleri Yükleme
@@ -479,103 +454,6 @@ http://localhost:8501
 adresinde çalışır.
 
 ---
-
-# 🔌 REST API
-
-Proje, Streamlit arayüzünün yanında **FastAPI tabanlı REST API** de sunmaktadır.
-
-API'yi başlatmak için:
-
-```bash
-uvicorn api:app --host 0.0.0.0 --port 8000
-```
-
-Geliştirme sırasında otomatik yeniden yükleme:
-
-```bash
-uvicorn api:app --host 0.0.0.0 --port 8000 --reload
-```
-
----
-
-## API Endpointleri
-
-| Method | Endpoint        | Açıklama                    |
-| ------ | --------------- | --------------------------- |
-| `GET`  | `/`             | API genel bilgileri         |
-| `GET`  | `/health`       | Sistem ve model durumu      |
-| `GET`  | `/datasets`     | Kullanılabilir veri setleri |
-| `GET`  | `/api/symptoms` | Desteklenen semptomlar      |
-| `POST` | `/api/predict`  | Hastalık tahmini            |
-
-FastAPI'nin otomatik dokümantasyonuna:
-
-```text
-http://localhost:8000/docs
-```
-
-adresinden ulaşılabilir.
-
----
-
-## Örnek API İsteği
-
-```bash
-curl -X POST http://localhost:8000/api/predict \
-  -H "Content-Type: application/json" \
-  -d "{\"symptoms\":[\"itching\",\"skin_rash\"]}"
-```
-
-Örnek yapı:
-
-```json
-{
-  "symptoms": [
-    "itching",
-    "skin_rash"
-  ],
-  "training_file": "Training.csv"
-}
-```
-
-API yanıtında model tahminleriyle birlikte:
-
-* Nihai tahmin
-* ICD-10 kodu
-* Güven seviyesi
-* Model bazlı tahminler
-* Apriori sonuçları
-* OOD durumu
-* Model anlaşması
-
-gibi bilgiler bulunabilir.
-
----
-
-# 🐳 Docker ile Çalıştırma
-
-Docker image oluşturmak için:
-
-```bash
-docker build -t hastalik-tespiti .
-```
-
-Container'ı çalıştırmak için:
-
-```bash
-docker run -p 8501:8501 hastalik-tespiti
-```
-
-Daha sonra:
-
-```text
-http://localhost:8501
-```
-
-adresinden uygulamaya erişilebilir.
-
----
-
 
 # 🧬 Model Versiyonlama
 
@@ -667,9 +545,6 @@ Satır sayısı  : 298
 Hastalık sınıfı: 40
 ```
 
-Ayrıca proje içerisinde sınıf dengeli sentetik veri üretimi ve `Synthetic.csv` veri seti desteği bulunmaktadır.
-
----
 
 # 🧪 Model Pipeline
 
@@ -723,40 +598,6 @@ Ayrıca çıktıların farklı formatlarda oluşturulması için raporlama modü
 
 ---
 
-# 🤖 Opsiyonel LLM Desteği
-
-Projede isteğe bağlı olarak LLM entegrasyonu bulunmaktadır.
-
-Desteklenen yaklaşımlar:
-
-* Ollama
-* OpenAI
-* Anthropic / Claude
-
-LLM'nin kullanım amacı **nihai hastalık tanısı koymak değildir**.
-
-LLM yalnızca serbest metinden semptom kodlarının çıkarılması gibi yardımcı işlemlerde kullanılabilir.
-
-Nihai hastalık tahmini:
-
-```text
-LLM
- │
- └──► Semptom çıkarımı
-          │
-          ▼
-     Kural tabanlı doğrulama
-          │
-          ▼
-   Makine öğrenmesi modelleri
-          │
-          ▼
-    Nihai tahmin
-```
-
-Bu tasarımda LLM'nin doğrudan tanı üretmesi engellenmiştir.
-
----
 
 # 📌 Projenin Teknik Özeti
 
