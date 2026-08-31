@@ -1,14 +1,14 @@
-# 🩺 Semptom Verilerine Dayalı Hastalık Tahmin ve Karar Destek Sistemi
+#  Semptom Verilerine Dayalı Hastalık Tahmin ve Karar Destek Sistemi
 
 Semptom verilerinden olası hastalıkları tahmin etmek amacıyla geliştirilen, **makine öğrenmesi, birliktelik analizi, topluluk öğrenmesi ve açıklanabilir yapay zekâ** yöntemlerini bir araya getiren modüler bir karar destek sistemidir.
 
 Sistem; kullanıcının seçtiği semptomları analiz ederek birden fazla makine öğrenmesi modelinden tahminler üretir, modellerin sonuçlarını **ağırlıklı soft-voting** yöntemiyle birleştirir ve sonuçları güven seviyesi, ICD-10 kodu, ayırıcı tanılar, Apriori kuralları ve açıklanabilirlik çıktılarıyla birlikte sunar.
 
-> ⚠️ **Önemli:** Bu proje tıbbi karar destek amacıyla geliştirilmiştir ve profesyonel tıbbi tanının yerine geçmez. Gerçek sağlık sorunlarında mutlaka bir sağlık profesyoneline başvurulmalıdır.
+>  **Önemli:** Bu proje tıbbi karar destek amacıyla geliştirilmiştir ve profesyonel tıbbi tanının yerine geçmez. Gerçek sağlık sorunlarında mutlaka bir sağlık profesyoneline başvurulmalıdır.
 
 ---
 
-## 📌 Projenin Amacı
+## Projenin Amacı
 
 Klasik hastalık tahmin sistemlerinde tek bir makine öğrenmesi modelinin kullanılması, modelin güçlü ve zayıf yönlerine bağlı olarak tahmin performansını sınırlayabilir.
 
@@ -54,9 +54,9 @@ Semptom Ön İşleme
 
 ---
 
-# ✨ Özellikler
+# Özellikler
 
-## 🤖 Çoklu Makine Öğrenmesi
+## Çoklu Makine Öğrenmesi
 
 Sistem aynı semptom girdisini **7 farklı sınıflandırma modeli** ile analiz eder:
 
@@ -72,7 +72,7 @@ Modellerin tahminleri daha sonra topluluk öğrenmesi yaklaşımıyla birleştir
 
 ---
 
-## 🔗 Apriori Birliktelik Kuralları
+## Apriori Birliktelik Kuralları
 
 Makine öğrenmesi modellerinin yanında **Apriori algoritması** kullanılarak semptom-hastalık ilişkileri analiz edilir.
 
@@ -90,7 +90,7 @@ Apriori sonuçları, seçilen semptomların hangi hastalıklarla daha güçlü b
 ---
 
 
-## 🗳️ Ağırlıklı Soft-Voting Ensemble
+## Ağırlıklı Soft-Voting Ensemble
 
 Her modelin tahmini doğrudan eşit ağırlıkta kullanılmaz.
 
@@ -109,7 +109,7 @@ birlikte değerlendirilebilir.
 
 ---
 
-## 🧠 Adaptif Belirti Toplama
+## Adaptif Belirti Toplama
 
 Sistem yalnızca kullanıcının verdiği semptomlarla sınırlı kalmaz.
 
@@ -125,7 +125,7 @@ gibi bilgilerden yararlanarak daha odaklı semptom toplama süreci oluşturur.
 
 ---
 
-## 📊 Hastalık Tahmini ve Ayırıcı Tanı
+## Hastalık Tahmini ve Ayırıcı Tanı
 
 Sistem yalnızca tek bir hastalık döndürmek yerine birden fazla olası hastalığı değerlendirebilir.
 
@@ -141,7 +141,7 @@ gösterilebilir.
 
 ---
 
-## 🚦 Güven Seviyesi
+## Güven Seviyesi
 
 Tahmin sonucuna göre güven seviyesi oluşturulur:
 
@@ -156,7 +156,7 @@ Güven seviyesi özellikle modellerin birbirinden farklı sonuçlar ürettiği d
 ---
 
 
-## 🔍 OOD (Out-of-Distribution) Algılama
+## OOD (Out-of-Distribution) Algılama
 
 Girilen semptom kombinasyonunun eğitim verilerine ne kadar benzediği kontrol edilir.
 
@@ -166,7 +166,7 @@ Bu özellik, modelin eğitim verisinin dışında kalan örneklerde aşırı gü
 
 ---
 
-## 🚨 Red Flag (Kritik Belirti) Kontrolü
+##Red Flag (Kritik Belirti) Kontrolü
 
 Sistemde hastalık tahmininden bağımsız olarak çalışan kural tabanlı bir Red Flag güvenlik mekanizması bulunmaktadır.Sistem belirli kritik semptomları ve semptom kombinasyonlarını kontrol eder.
 
@@ -200,7 +200,7 @@ ortak şekilde kullanılmaktadır.
 
 ---
 
-## 🏥 ICD-10 Entegrasyonu
+## ICD-10 Entegrasyonu
 
 Tahmin edilen hastalıklar **ICD-10** kodlarıyla eşleştirilir.
 
@@ -216,7 +216,7 @@ Projede hastalık etiketleri için kapsamlı ICD-10 eşlemesi bulunmaktadır.
 
 ---
 
-## 💬 Türkçe Sohbet Asistanı
+## Türkçe Sohbet Asistanı
 
 Projede semptom ve hastalık bilgileriyle etkileşim kurulabilmesini sağlayan Türkçe sohbet asistanı bulunmaktadır.
 
@@ -230,7 +230,7 @@ Sistem:
 
 ---
 
-## 🌍 Türkçe / İngilizce Dil Desteği
+## Türkçe / İngilizce Dil Desteği
 
 Arayüz iki dili destekler:
 
@@ -241,7 +241,7 @@ Arayüz iki dili destekler:
 
 ---
 
-## 🧩 Semptom Şiddeti ve Süresi
+##Semptom Şiddeti ve Süresi
 
 Kullanıcı seçtiği semptomlar için:
 
@@ -262,7 +262,7 @@ Bu bilgiler model girişinde türetilmiş özellikler olarak kullanılabilir.
 
 ---
 
-## 🔬 Açıklanabilir Yapay Zekâ
+##Açıklanabilir Yapay Zekâ
 
 Model tahminlerinin yalnızca sonuç olarak verilmesi yerine, tahmini etkileyen özelliklerin anlaşılabilmesi için:
 
@@ -282,7 +282,7 @@ gibi sorulara yönelik açıklamalar üretilebilir.
 
 ---
 
-## 📈 Model Değerlendirme
+##Model Değerlendirme
 
 Model performanslarını değerlendirmek için:
 
@@ -306,7 +306,7 @@ gibi kalibrasyon ölçümleri de bulunmaktadır.
 
 ---
 
-## 🔐 Veri Gizliliği
+##Veri Gizliliği
 
 Sistem **yerel olarak çalışacak şekilde tasarlanmıştır.**
 
@@ -324,7 +324,7 @@ klasöründe tutabilir.
 
 ---
 
-# 🗂️ Proje Yapısı
+#  Proje Yapısı
 
 ```text
 apriori-hastalik-tespiti/
@@ -413,7 +413,7 @@ pip install -r requirements-dev.txt
 
 ---
 
-# ▶️ Uygulamayı Çalıştırma
+#Uygulamayı Çalıştırma
 
 ## Windows
 
@@ -456,7 +456,7 @@ adresinde çalışır.
 
 ---
 
-# 🧬 Model Versiyonlama
+# Model Versiyonlama
 
 Model artefaktlarının bütünlüğünü takip etmek için:
 
@@ -480,7 +480,7 @@ Bu yapı, model dosyalarının hangi veri setinden üretildiğinin takip edilmes
 
 ---
 
-# 📦 Kullanılan Teknolojiler
+# Kullanılan Teknolojiler
 
 ### Programlama
 
@@ -534,7 +534,7 @@ Bu yapı, model dosyalarının hangi veri setinden üretildiğinin takip edilmes
 
 ---
 
-# 📊 Veri Seti
+# Veri Seti
 
 Proje eğitim aşamasında hastalık ve semptom ilişkilerini içeren veri setlerinden yararlanır.
 
@@ -547,7 +547,7 @@ Hastalık sınıfı: 40
 ```
 
 
-# 🧪 Model Pipeline
+# Model Pipeline
 
 Genel tahmin pipeline'ı:
 
@@ -581,7 +581,7 @@ Genel tahmin pipeline'ı:
 
 ---
 
-# 📄 Raporlama
+#  Raporlama
 
 Sistem tahmin sonuçlarının raporlanmasını destekler.
 
@@ -600,7 +600,7 @@ Ayrıca çıktıların farklı formatlarda oluşturulması için raporlama modü
 ---
 
 
-# 📌 Projenin Teknik Özeti
+#  Projenin Teknik Özeti
 
 | Bileşen             | Kullanılan Yöntem           |
 | ------------------- | --------------------------- |
@@ -623,7 +623,7 @@ Ayrıca çıktıların farklı formatlarda oluşturulması için raporlama modü
 
 ---
 
-# 🔒 Güvenlik ve Etik Kullanım
+#  Güvenlik ve Etik Kullanım
 
 Bu proje eğitim, araştırma ve karar destek amacıyla geliştirilmiştir.
 
@@ -638,7 +638,7 @@ Gerçek kişilere ait kimlik bilgileri veya hassas sağlık verilerinin sisteme 
 
 ---
 
-# 🚀 Gelecekte Geliştirilebilecek Alanlar
+# Gelecekte Geliştirilebilecek Alanlar
 
 Projeye ilerleyen aşamalarda aşağıdaki özellikler eklenebilir:
 
@@ -655,20 +655,21 @@ Projeye ilerleyen aşamalarda aşağıdaki özellikler eklenebilir:
 
 ---
 
-# 👨‍💻 Geliştirici
+#  Geliştirici
 
 **Fahri Kantaş**
+
 **Salih Emre Kesici**
 
 ---
 
-# 📜 Lisans
+#  Lisans
 
 Bu projenin lisans koşulları için repository içerisindeki lisans dosyasını inceleyiniz.
 
 ---
 
-## ⚠️ Disclaimer
+##  Disclaimer
 
 **Bu yazılım yalnızca eğitim, araştırma ve karar destek amacıyla geliştirilmiştir.**
 
