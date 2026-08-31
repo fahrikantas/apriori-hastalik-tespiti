@@ -326,95 +326,60 @@ klasöründe tutabilir.
 # 🗂️ Proje Yapısı
 
 ```text
-DiseasePrediction/
-│
-├── .github/
-│   └── workflows/
-│       └── ci.yml
-│
-├── assets/
-│   └── style.css
-│
+apriori-hastalik-tespiti/
+├── models/                    # eğitilmiş modeller + metadata (decision_tree, naive_bayes, ...)
+│   └── manifest.json          # model versiyonlama / SHA-256 manifesti
 ├── data/
-│   ├── content/
+│   ├── Synthetic.csv          # otomatik üretilen sınıf dengeli sentetik veri
+│   ├── synthetic_dataset.csv
+│   ├── content/                # chatbot sözlükleri (JSON)
 │   │   ├── extra_symptom_aliases.json
 │   │   ├── symptom_advice.json
 │   │   ├── symptom_descriptions.json
 │   │   └── turkish_disease_aliases.json
-│   │
-│   ├── telemetry/
-│   │   └── predictions.jsonl
-│   │
-│   ├── Synthetic.csv
-│   └── synthetic_dataset.csv
-│
-├── models/
-│   ├── apriori_rules.pkl
-│   ├── decision_tree.pkl
-│   ├── naive_bayes.pkl
-│   ├── random_forest.pkl
-│   ├── logistic_regression.pkl
-│   ├── svm.pkl
-│   ├── xgboost.pkl
-│   ├── lightgbm.pkl
-│   └── manifest.json
-│
+│   └── telemetry/              # yerel tahmin kayıtları
+├── assets/
+│   └── style.css               # arayüz stilleri (app.py buradan okur)
 ├── src/
-│   ├── active_elicitation.py
-│   ├── apriori_rules.py
-│   ├── chatbot.py
-│   ├── decision_tree.py
-│   ├── disease_info.py
-│   ├── evaluation.py
-│   ├── explainability.py
-│   ├── i18n.py
-│   ├── icd10.py
-│   ├── lightgbm_model.py
-│   ├── llm.py
-│   ├── logistic_regression.py
-│   ├── model_metadata.py
-│   ├── naive_bayes.py
-│   ├── predict.py
 │   ├── preprocess.py
+│   ├── split.py                # leak önleyici, grup bilinçli train/test ayrımı
+│   ├── active_elicitation.py   # adaptif "sıradaki belirti" önerisi (mutual information)
+│   ├── synthetic_data.py       # sınıf dengeli sentetik veri üretici
+│   ├── apriori_rules.py
+│   ├── decision_tree.py
+│   ├── naive_bayes.py
 │   ├── random_forest.py
-│   ├── red_flags.py
-│   ├── reports.py
-│   ├── split.py
+│   ├── logistic_regression.py
 │   ├── svm.py
-│   ├── synthetic_data.py
-│   ├── telemetry.py
-│   ├── utils.py
-│   ├── versioning.py
+│   ├── xgboost_model.py
+│   ├── lightgbm_model.py
+│   ├── icd10.py                # ICD-10 kod eşlemesi
+│   ├── red_flags.py            # kırmızı bayrak kuralları (tek + kombinasyon)
+│   ├── evaluation.py           # grup bilinçli CV, sınıf metrikleri, kalibrasyon
+│   ├── model_metadata.py       # veri parmak izi, model durumu, toplu yeniden eğitim
+│   ├── versioning.py           # manifest + SHA-256 + schema versiyonu
+│   ├── telemetry.py            # yerel tahmin kayıtları ve ayrılık özeti
+│   ├── reports.py              # txt/HTML/PDF rapor üretimi
+│   ├── predict.py
 │   ├── visualization.py
-│   └── xgboost_model.py
-│
-├── tests/
-│   ├── test_api.py
-│   ├── test_app_flow.py
-│   ├── test_calibration.py
-│   ├── test_chatbot.py
-│   ├── test_content.py
-│   ├── test_differential.py
-│   ├── test_evaluation.py
-│   ├── test_icd10.py
-│   ├── test_llm.py
-│   ├── test_ood.py
-│   ├── test_pipeline.py
-│   ├── test_red_flags.py
-│   ├── test_retraining.py
-│   ├── test_split.py
-│   ├── test_synthetic.py
-│   ├── test_telemetry.py
-│   └── test_versioning.py
-│
-├── api.py
-├── app.py
-├── Dockerfile
-├── pytest.ini
+│   ├── explainability.py
+│   ├── chatbot.py
+│   ├── llm.py                  # opsiyonel LLM entegrasyonu (Ollama/OpenAI/Claude)
+│   ├── i18n.py                 # Türkçe/İngilizce çeviri sözlüğü
+│   ├── disease_info.py
+│   ├── model_metadata.py
+│   └── utils.py
+├── tests/                      # pytest testleri
+├── tools/                      # yardımcı betikler (retrain_all_models.py, eval_check.py, ...)
+├── app.py                      # Streamlit arayüzü
+├── api.py                      # FastAPI tabanlı REST API
+├── training_duzenlenmis.csv    # ana eğitim veri kümesi
+├── run.bat                     # Windows: tek tıkla çalıştırma
+├── run.sh                      # macOS/Linux: tek tıkla çalıştırma
 ├── requirements.txt
 ├── requirements-dev.txt
-├── run.bat
-├── run.sh
+├── pytest.ini
+├── Dockerfile
 └── README.md
 ```
 
