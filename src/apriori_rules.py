@@ -18,11 +18,10 @@ from src.preprocess import frame_to_transactions, preprocess_training_data
 from src.utils import TARGET_COLUMN, humanize_label, normalize_symptom_name
 
 DISEASE_PREFIX = "disease_"
-DEFAULT_MIN_SUPPORT = 0.02
-DEFAULT_MIN_CONFIDENCE = 0.60
 DEFAULT_MIN_LIFT = 1.0
-DEFAULT_MAX_LEN = 3
-
+DEFAULT_MIN_SUPPORT = 0.01
+DEFAULT_MIN_CONFIDENCE = 0.50
+DEFAULT_MAX_LEN = 5
 
 @dataclass(frozen=True)
 class AprioriResult:
@@ -79,12 +78,24 @@ def mine_association_rules(
     return AprioriResult(rules=rules, encoded_transactions=encoded_transactions)
 
 
-def prepare_apriori_from_training(file_name: str = "Training.csv") -> AprioriResult:
+def prepare_apriori_from_training(
+    file_name: str = "Training.csv",
+    min_support: float = DEFAULT_MIN_SUPPORT,
+    min_confidence: float = DEFAULT_MIN_CONFIDENCE,
+    min_lift: float = DEFAULT_MIN_LIFT,
+    max_len: int = DEFAULT_MAX_LEN,
+) -> AprioriResult:
     """Load the dataset, convert it to transactions, and mine association rules."""
 
     preprocessed = preprocess_training_data(file_name)
     transactions = frame_to_transactions(preprocessed.frame)
-    return mine_association_rules(transactions)
+    return mine_association_rules(
+        transactions,
+        min_support=min_support,
+        min_confidence=min_confidence,
+        min_lift=min_lift,
+        max_len=max_len,
+    )
 
 
 def _is_disease_itemset(itemset: frozenset[str]) -> bool:
@@ -168,36 +179,37 @@ def recommend_diseases_from_symptoms(
     normalized_symptoms = {
         normalize_symptom_name(symptom) for symptom in selected_symptoms
     }
+    empty_result = pd.DataFrame(
+        columns=["antecedents", "consequent", "support_pct", "confidence_pct", "lift"]
+    )
     if rules.empty or not normalized_symptoms:
-        return pd.DataFrame(
-            columns=["antecedents", "consequent", "support_pct", "confidence_pct", "lift"]
-        )
+        return empty_result
 
-    exact_matches: list[pd.Series] = []
-    partial_matches: list[pd.Series] = []
-    for _, rule in rules.iterrows():
-        symptom_items = _antecedent_symptoms(rule["antecedents"])
+    antecedent_sets = [_antecedent_symptoms(itemset) for itemset in rules["antecedents"].tolist()]
+
+    exact_indices: list[int] = []
+    partial_matches: list[tuple[int, int]] = []
+    for index, symptom_items in enumerate(antecedent_sets):
+        if not symptom_items:
+            continue
         overlap_size = len(symptom_items.intersection(normalized_symptoms))
-        if not symptom_items or overlap_size == 0:
+        if overlap_size == 0:
             continue
         if symptom_items.issubset(normalized_symptoms):
-            exact_matches.append(rule)
+            exact_indices.append(index)
         else:
-            rule = rule.copy()
-            rule["match_size"] = overlap_size
-            partial_matches.append(rule)
+            partial_matches.append((index, overlap_size))
 
-    if exact_matches:
-        matched_rules = pd.DataFrame(exact_matches)
+    if exact_indices:
+        matched_rules = rules.iloc[exact_indices].copy()
         matched_rules["match_size"] = matched_rules["antecedents"].apply(
             lambda itemset: len(_antecedent_symptoms(itemset))
         )
     elif partial_matches:
-        matched_rules = pd.DataFrame(partial_matches)
+        matched_rules = rules.iloc[[index for index, _ in partial_matches]].copy()
+        matched_rules["match_size"] = [overlap for _, overlap in partial_matches]
     else:
-        return pd.DataFrame(
-            columns=["antecedents", "consequent", "support_pct", "confidence_pct", "lift"]
-        )
+        return empty_result
 
     matched_rules = matched_rules.sort_values(
         by=["match_size", "confidence", "lift", "support"],

@@ -19,6 +19,9 @@ from src.utils import (
     normalize_symptom_name,
 )
 
+DEFAULT_SEVERITY_WHEN_PRESENT = 2
+DEFAULT_DURATION_DAYS_WHEN_PRESENT = 3
+
 
 @dataclass(frozen=True)
 class PreprocessingSummary:
@@ -66,11 +69,59 @@ def identify_symptom_columns(frame: pd.DataFrame) -> list[str]:
     return [column for column in frame.columns if column != TARGET_COLUMN]
 
 
+def _is_binary_feature(series: pd.Series) -> bool:
+    """Return True when a feature contains only 0/1 values."""
+
+    if series.empty:
+        return False
+    # Coerce to numeric and drop non-finite values before testing
+    values = pd.to_numeric(series, errors="coerce")
+    # Remove NaN and infinite values for the binary check
+    finite = values.replace([pd.NA, None], pd.NA).dropna()
+    finite = finite[finite.apply(pd.api.types.is_number) | finite.map(lambda x: pd.notna(x))]
+    finite = finite[pd.to_numeric(finite, errors="coerce").replace([float("inf"), float("-inf")], pd.NA).dropna()]
+    if finite.empty:
+        return False
+    try:
+        unique_values = set(pd.to_numeric(finite, errors="coerce").astype(int).unique())
+    except Exception:
+        return False
+    return unique_values.issubset({0, 1})
+
+
+def _ensure_severity_duration_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    """Create optional severity/duration feature columns for binary symptoms."""
+
+    expanded_frame = frame.copy()
+    binary_columns = [
+        column
+        for column in identify_symptom_columns(expanded_frame)
+        if not column.endswith(("_severity", "_duration")) and _is_binary_feature(expanded_frame[column])
+    ]
+    derived_values: dict[str, list[int]] = {}
+    for column in binary_columns:
+        severity_column = f"{column}_severity"
+        duration_column = f"{column}_duration"
+        # Safely coerce numeric values and treat non-finite as 0 (absent)
+        base_values = pd.to_numeric(expanded_frame[column], errors="coerce")
+        base_values = base_values.replace([float("inf"), float("-inf")], pd.NA).fillna(0)
+        base_values = base_values.astype(int)
+        present_values = (base_values > 0).astype(int)
+        if severity_column not in expanded_frame.columns:
+            derived_values[severity_column] = (present_values * DEFAULT_SEVERITY_WHEN_PRESENT).tolist()
+        if duration_column not in expanded_frame.columns:
+            derived_values[duration_column] = (present_values * DEFAULT_DURATION_DAYS_WHEN_PRESENT).tolist()
+    if derived_values:
+        expanded_frame = pd.concat([expanded_frame, pd.DataFrame(derived_values, index=expanded_frame.index)], axis=1)
+    return expanded_frame
+
+
 def clean_training_frame(frame: pd.DataFrame) -> pd.DataFrame:
     """Clean the training data so it can be consumed by all models."""
 
     cleaned_frame = standardize_columns(frame.copy())
     ensure_columns_exist(cleaned_frame, [TARGET_COLUMN])
+    cleaned_frame = _ensure_severity_duration_columns(cleaned_frame)
 
     symptom_columns = identify_symptom_columns(cleaned_frame)
     cleaned_frame[symptom_columns] = cleaned_frame[symptom_columns].apply(
@@ -116,7 +167,11 @@ def frame_to_transactions(frame: pd.DataFrame) -> list[list[str]]:
     final item so association rules can produce disease recommendations.
     """
 
-    symptom_columns = identify_symptom_columns(frame)
+    symptom_columns = [
+        column
+        for column in identify_symptom_columns(frame)
+        if not column.endswith(("_severity", "_duration")) and _is_binary_feature(frame[column])
+    ]
     transactions: list[list[str]] = []
     for _, row in frame.iterrows():
         active_items = [column for column in symptom_columns if int(row[column]) == 1]
@@ -128,7 +183,11 @@ def frame_to_transactions(frame: pd.DataFrame) -> list[list[str]]:
 def get_available_symptoms(frame: pd.DataFrame) -> list[str]:
     """Return the sorted symptom vocabulary expected by the UI."""
 
-    symptom_columns = identify_symptom_columns(frame)
+    symptom_columns = [
+        column
+        for column in identify_symptom_columns(frame)
+        if not column.endswith(("_severity", "_duration")) and _is_binary_feature(frame[column])
+    ]
     return sorted(symptom_columns)
 
 

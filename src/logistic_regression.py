@@ -1,4 +1,4 @@
-"""Naive Bayes model training and persistence."""
+"""Logistic Regression model training and persistence."""
 
 from __future__ import annotations
 
@@ -6,11 +6,9 @@ from dataclasses import dataclass
 from typing import Any
 
 import joblib
-import numpy as np
 import pandas as pd
-from sklearn.calibration import CalibratedClassifierCV
+from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
-from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import LabelEncoder
 
 from src.model_metadata import build_bundle_metadata
@@ -18,14 +16,14 @@ from src.preprocess import preprocess_training_data
 from src.split import split_train_test
 from src.utils import TARGET_COLUMN, resolve_model_path
 
-NAIVE_BAYES_MODEL_NAME = "naive_bayes.pkl"
+LOGISTIC_REGRESSION_MODEL_NAME = "logistic_regression.pkl"
 DEFAULT_TEST_SIZE = 0.2
 DEFAULT_RANDOM_STATE = 42
 
 
 @dataclass(frozen=True)
-class NaiveBayesResult:
-    """Training result bundle for Gaussian Naive Bayes."""
+class LogisticRegressionResult:
+    """Training result bundle for Logistic Regression."""
 
     model: Any
     label_encoder: LabelEncoder
@@ -36,7 +34,7 @@ class NaiveBayesResult:
 
 
 def _prepare_training_split(file_name: str) -> tuple[pd.DataFrame, pd.Series, list[str], Any]:
-    """Load the cleaned dataset and return the features and labels."""
+    """Load the cleaned training data and split it into features and target."""
 
     preprocessed = preprocess_training_data(file_name)
     frame = preprocessed.frame
@@ -46,28 +44,23 @@ def _prepare_training_split(file_name: str) -> tuple[pd.DataFrame, pd.Series, li
     return features, target, feature_columns, preprocessed
 
 
-def _calibrated_naive_bayes(x_train: pd.DataFrame, y_train: np.ndarray) -> Any:
-    """Calibrate Naive Bayes probabilities when class sizes allow it."""
-
-    counts = np.bincount(y_train)
-    if len(counts) < 3 or int(counts.min()) < 2:
-        return GaussianNB().fit(x_train, y_train)
-    try:
-        base = GaussianNB().fit(x_train, y_train)
-        return CalibratedClassifierCV(base, cv=3, method="sigmoid").fit(x_train, y_train)
-    except Exception:
-        return GaussianNB().fit(x_train, y_train)
+def _make_estimator(random_state: int = DEFAULT_RANDOM_STATE) -> LogisticRegression:
+    return LogisticRegression(
+        max_iter=1500,
+        random_state=random_state,
+        class_weight="balanced",
+    )
 
 
-def train_naive_bayes(
+def train_logistic_regression(
     file_name: str = "Training.csv",
     test_size: float = DEFAULT_TEST_SIZE,
     random_state: int = DEFAULT_RANDOM_STATE,
-) -> NaiveBayesResult:
-    """Train a Gaussian Naive Bayes classifier and persist it to disk.
+) -> LogisticRegressionResult:
+    """Train a Logistic Regression classifier and persist the artifact.
 
-    A serving model is calibrated on the full dataset while the reported
-    accuracy is measured with an independently fitted, leak-aware fold model.
+    The serving model is fit on the full dataset; the reported accuracy is
+    measured with an independently fitted, leak-aware fold model.
     """
 
     features, target, feature_columns, preprocessed = _prepare_training_split(file_name)
@@ -81,12 +74,17 @@ def train_naive_bayes(
         random_state=random_state,
     )
 
-    serving_model = _calibrated_naive_bayes(features, encoded_target)
-    eval_model = _calibrated_naive_bayes(x_train, y_train)
+    serving_model = _make_estimator(random_state)
+    serving_model.fit(features, encoded_target)
+
+    eval_model = _make_estimator(random_state)
+    eval_model.fit(x_train, y_train)
 
     predictions = eval_model.predict(x_test)
     accuracy = float(accuracy_score(y_test, predictions))
 
+    # Ensure classification_report receives matching labels and target_names for
+    # the subset of classes present in this holdout fold.
     import numpy as _np
 
     present_labels = _np.unique(_np.concatenate([_np.asarray(y_test), _np.asarray(predictions)]))
@@ -102,7 +100,7 @@ def train_naive_bayes(
     except Exception:
         report_text = classification_report(y_test, predictions, zero_division=0)
 
-    model_path = resolve_model_path(NAIVE_BAYES_MODEL_NAME)
+    model_path = resolve_model_path(LOGISTIC_REGRESSION_MODEL_NAME)
     joblib.dump(
         {
             "model": serving_model,
@@ -121,7 +119,7 @@ def train_naive_bayes(
         model_path,
     )
 
-    return NaiveBayesResult(
+    return LogisticRegressionResult(
         model=serving_model,
         label_encoder=label_encoder,
         accuracy=accuracy,

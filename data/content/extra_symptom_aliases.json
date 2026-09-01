@@ -1,0 +1,48 @@
+{
+  "nausea": [
+    "mide_bulantisi",
+    "midem_bulaniyor"
+  ],
+  "dizziness": [
+    "donuyor",
+    "donme",
+    "bas_donmesi"
+  ],
+  "loss_of_appetite": [
+    "istahsizlik",
+    "istah"
+  ],
+  "runny_nose": [
+    "burun_akintisi"
+  ],
+  "palpitations": [
+    "kalp_carpintisi"
+  ],
+  "weight_loss": [
+    "kilo_kaybi"
+  ],
+  "weight_gain": [
+    "kilo_alimi"
+  ],
+  "fatigue": [
+    "yorgunluk"
+  ],
+  "malaise": [
+    "halsiz"
+  ],
+  "depression": [
+    "depresyon"
+  ],
+  "anxiety": [
+    "anksiyete",
+    "endise"
+  ],
+  "cough": [
+    "oksuruyorum",
+    "oksur"
+  ],
+  "headache": [
+    "bas_agrisi",
+    "basagrisi"
+  ]
+}

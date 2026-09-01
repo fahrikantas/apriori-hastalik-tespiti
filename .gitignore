@@ -216,3 +216,14 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Trained artifacts (reproducible from retrain_all_models)
+models/
+models/*.pkl
+models/manifest.json
+
+# Local telemetry log
+data/telemetry/
+
+# Generated synthetic dataset
+data/synthetic_dataset.csv
